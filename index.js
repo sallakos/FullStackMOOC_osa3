@@ -1,8 +1,8 @@
 const express = require('express')
 const app = express()
-// const bodyParser = require('body-parser')
+const bodyParser = require('body-parser')
 
-// app.use(bodyParser.json())
+app.use(bodyParser.json())
 
 let persons = [
   {
@@ -30,6 +30,34 @@ let persons = [
 // Kaikki henkilöt.
 app.get('/api/persons', (req, res) => {
   res.json(persons)
+})
+
+app.post('/api/persons', (req, res) => {
+
+  const body = req.body
+
+  if (!body.name) {
+    return res.status(400).json({
+      error: 'Name is missing.'
+    })
+  }
+
+  if (!body.number) {
+    return res.status(400).json({
+      error: 'Number is missing.'
+    })
+  }
+
+  const person = {
+    name: body.name,
+    number : body.number,
+    id: Math.floor(Math.random() * (1000 - 5 + 1) + 5)
+  }
+
+  persons = persons.concat(person)
+
+  res.json(person)
+
 })
 
 // Yksittäinen henkilö.
