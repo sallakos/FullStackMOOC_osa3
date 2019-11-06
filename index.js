@@ -27,10 +27,12 @@ let persons = [
   }
 ]
 
+// Kaikki henkilöt.
 app.get('/api/persons', (req, res) => {
   res.json(persons)
 })
 
+// Yksittäinen henkilö.
 app.get('/api/persons/:id', (req, res) => {
 
   const id = Number(req.params.id)
@@ -44,12 +46,20 @@ app.get('/api/persons/:id', (req, res) => {
 
 })
 
+app.delete('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id)
+  persons = persons.filter(person => person.id !== id)
+  res.status(204).end()
+})
+
+// Info.
 app.get('/info', (req, res) => {
   const numberOfContacts = persons.length
   res.send(`<p>Phonebook has info for ${numberOfContacts} people</p>
   <p>${new Date}</p>`)
 })
 
+// Palvelininfo.
 const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
