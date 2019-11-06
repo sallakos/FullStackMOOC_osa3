@@ -48,6 +48,14 @@ app.post('/api/persons', (req, res) => {
     })
   }
 
+  const personNames = persons.map(person => person.name.trim().toLowerCase())
+
+  if (personNames.indexOf(body.name.trim().toLowerCase()) >= 0) {
+    return res.status(400).json({
+      error: 'Name must be unique.'
+    })
+  }
+
   const person = {
     name: body.name,
     number : body.number,
