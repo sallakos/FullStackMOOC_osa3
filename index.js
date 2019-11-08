@@ -2,13 +2,15 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const cors = require('cors')
 
 app.use(bodyParser.json())
 app.use(morgan('tiny :method :url :status :res[content-length] - :response-time ms :postParam'))
-
 morgan.token('postParam', (req, res) => 
 	JSON.stringify(req.body)
 )
+app.use(cors())
+app.use(express.static('build'))
 
 let persons = [
   {
@@ -101,8 +103,10 @@ app.get('/info', (req, res) => {
   <p>${new Date}</p>`)
 })
 
+// Henkilön tietojen muuttamista ei toteutettu!
+
 // Palvelininfo.
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
