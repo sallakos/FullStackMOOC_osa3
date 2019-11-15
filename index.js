@@ -38,14 +38,6 @@ app.post('/api/persons', (req, res) => {
     })
   }
 
-  const personNames = Contact.find({}).map(person => person.name.trim().toLowerCase())
-
-  if (personNames.indexOf(body.name.trim().toLowerCase()) >= 0) {
-    return res.status(400).json({
-      error: 'Name must be unique.'
-    })
-  }
-  
   const contact = new Contact({
     name: body.name,
     number: body.number
@@ -78,11 +70,33 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error))
 })
 
+app.put('/api/persons/:id', (req, res, next) => {
+
+  const body = req.body
+  const contact = {
+    name: body.name,
+    number: body.number
+  }
+
+  Contact.findByIdAndUpdate(req.params.id, contact, { new: true })
+    .then(updatedContact => {
+      if (updatedContact) {
+        res.json(updatedContact.toJSON())
+      } else {
+        res.status(400).end()
+      }
+    })
+    .catch(error => next(error))
+
+})
+
 // Info.
 app.get('/info', (req, res) => {
-  const numberOfContacts = persons.length
-  res.send(`<p>Phonebook has info for ${numberOfContacts} people</p>
-  <p>${new Date}</p>`)
+  Contact.find({})
+    .then(contacts => {
+      res.send(`<p>Phonebook has info for ${contacts.length} people</p>
+                <p>${new Date}</p>`)
+    })
 })
 
 const errorHandler = (error, req, res, next) => {
