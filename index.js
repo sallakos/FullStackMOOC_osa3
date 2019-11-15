@@ -3,6 +3,8 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const dotenv = require('dotenv').config()
+const Contact = require('./models/contact')
 
 app.use(bodyParser.json())
 app.use(morgan('tiny :method :url :status :res[content-length] - :response-time ms :postParam'))
@@ -35,11 +37,14 @@ let persons = [
   }
 ]
 
-// Kaikki henkilöt.
+// Kaikki henkilöt. Haetaan tietokannasta.
 app.get('/api/persons', (req, res) => {
-  res.json(persons)
+  Contact.find({}).then(contacts => {
+    res.json(contacts.map(contact => contact.toJSON()))
+  })
 })
 
+// Henkilöt tallennetaan tietokantaan.
 app.post('/api/persons', (req, res) => {
 
   const body = req.body
@@ -64,15 +69,14 @@ app.post('/api/persons', (req, res) => {
     })
   }
 
-  const person = {
+  const person = new Contact({
     name: body.name,
-    number : body.number,
-    id: Math.floor(Math.random() * (1000 - 5 + 1) + 5)
-  }
+    number : body.number
+  })
 
-  persons = persons.concat(person)
-
-  res.json(person)
+  person.save().then(savedContact => {
+    res.json(savedContact.toJSON())
+  })
 
 })
  
