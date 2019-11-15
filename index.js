@@ -38,14 +38,14 @@ app.post('/api/persons', (req, res) => {
     })
   }
 
-  // const personNames = persons.map(person => person.name.trim().toLowerCase())
+  const personNames = Contact.find({}).map(person => person.name.trim().toLowerCase())
 
-  // if (personNames.indexOf(body.name.trim().toLowerCase()) >= 0) {
-  //   return res.status(400).json({
-  //     error: 'Name must be unique.'
-  //   })
-  // }
-
+  if (personNames.indexOf(body.name.trim().toLowerCase()) >= 0) {
+    return res.status(400).json({
+      error: 'Name must be unique.'
+    })
+  }
+  
   const contact = new Contact({
     name: body.name,
     number: body.number
@@ -84,8 +84,6 @@ app.get('/info', (req, res) => {
   res.send(`<p>Phonebook has info for ${numberOfContacts} people</p>
   <p>${new Date}</p>`)
 })
-
-
 
 const errorHandler = (error, req, res, next) => {
 
