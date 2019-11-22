@@ -61,6 +61,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error))
 })
 
+// Päivittäminen ei enää onnistu, koska nimen tulee olla uniikki.
 app.put('/api/persons/:id', (req, res, next) => {
 
   const body = req.body
