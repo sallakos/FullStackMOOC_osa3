@@ -1,4 +1,4 @@
 # FullStackMOOC osa3
 Repository for FullStack MOOC -course part 3.
 
-[Check the app!](https://still-shelf-57357.herokuapp.com/)
+[Check the app!](https://sallakos-fullstack-phonebook.herokuapp.com/)
