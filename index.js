@@ -3,11 +3,13 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+// eslint-disable-next-line no-unused-vars
 const dotenv = require('dotenv').config()
 const Contact = require('./models/contact')
 
 app.use(bodyParser.json())
 app.use(morgan('tiny :method :url :status :res[content-length] - :response-time ms :postParam'))
+// eslint-disable-next-line no-unused-vars
 morgan.token('postParam', (req, res) =>
   JSON.stringify(req.body)
 )
@@ -55,7 +57,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Contact.findByIdAndRemove(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => next(error))
@@ -95,7 +97,7 @@ const errorHandler = (error, req, res, next) => {
 
   console.log(error.message)
 
-  if (error.name === 'CastError' && error.kind == 'ObjectId') {
+  if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return res.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
     return res.status(400).json({ error: error.message })
@@ -108,6 +110,7 @@ const errorHandler = (error, req, res, next) => {
 app.use(errorHandler)
 
 // Palvelininfo.
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
